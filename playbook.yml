@@ -1,0 +1,35 @@
+---
+- name: My Playbiik for Variables
+  hosts: all
+  become: yes
+
+  vars:
+    message1: privet
+    message2: world
+    secret: djfhjedh
+
+  tasks:
+
+  - name: Privet secret variable
+    debug:
+      var: secret
+
+  - debug:
+      msg: "Sekretnoe slovo: {{ secret }}"
+
+  - debug:
+      msg: "Vladelec servers: -->{{ owner }}<--"
+
+  - set_fact: full_message="{{ message1 }} {{ message2 }} from {{ owner }}"
+
+  - debug: 
+      var: full_message
+
+  - debug:
+      var: ansible_distribution
+
+  - shell: uptime
+    register: results
+
+  - debug:
+      var: results.stdout
