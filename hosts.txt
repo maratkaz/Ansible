@@ -1,6 +1,10 @@
 
-[staging_servers]
+[PROD]
 linux1 ansible_host=172.31.3.83 owner=Marat
 
-[prod_servers]
+[STAGING]
 linux2 ansible_host=172.31.14.215 owner=MK
+
+[All_LINUX:children]
+PROD
+STAGING
