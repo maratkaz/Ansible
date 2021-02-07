@@ -1,0 +1,45 @@
+---
+- name: My Playbook
+  hosts: all
+  become: yes
+
+  vars:
+    mytext: "Privet delegate"
+
+  tasks:
+  - name: Ping test
+    ping:
+
+  - name: Unregister Server from Load Balancer
+    shell: echo This server {{ inventory_hostname }} was deregistered from our Load Balancer, node name is {{ ansible_nodename }} >> /home/ec2-user/log.txt
+    delegate_to: 127.0.0.1
+
+  - name: Create file1
+    copy:
+      dest: /home/ec2-user/file1.txt
+      content: |
+        Text Line1, in file1
+        Text Line2, in file1
+        Text Line3, {{ mytext }}
+    delegate_to: linux2
+
+  - name: Create file2
+    copy:
+      dest: /home/ec2-user/file2.txt
+      content: |
+        Text Line1, in file2
+        Text Line2, in file2
+        Text Line3, {{ mytext }}
+
+  - name: Reboot my servers
+    shell: sleep 3 && reboot now
+    async: 1
+    poll: 0
+
+  - name: Wait till my servers will come up online
+    wait_for:
+       host: "{{ inventory_hostname }}"
+       state: started
+       delay: 5
+       timeout: 40
+    delegate_to: 127.0.0.1
