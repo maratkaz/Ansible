@@ -1,0 +1,17 @@
+---
+- name: My Playbook
+  hosts: all
+  become: yes
+
+  vars:
+    mytext: "Privet Import-include"
+
+  tasks:
+  - name: Ping test
+    ping:
+
+  - name: Create Folders
+    include: create_folders.yml
+
+  - name: Create Files
+    include: create_files.yml mytext="Hello"
